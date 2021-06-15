@@ -1,6 +1,8 @@
 
 #include <ATTinyCore.h>
 #include <avr/wdt.h>
+#include <avr/sleep.h>
+#include <avr/interrupt.h>
 
 /*
  *  ATTiny85
@@ -82,6 +84,7 @@ void setup() {
   oled.setFont(FONT16X32DIGITS);
   oled.clear();
   oled.switchRenderFrame();
+  oled.setContrast(70);
   oled.on();
   cSensor.begin();
 
@@ -89,10 +92,22 @@ void setup() {
   ps=cSensor.getPressure()-ps_error;
   temp=cSensor.getTemperatureCelcius();
   updateDisplay();
-  wdt_enable(WDTO_8S);
+
+  ADCSRA &= ~(1<<ADEN);
+  // watchdog interrupt
+  wdt_reset();
+  wdt_enable(WDTO_4S);
+  WDTCR |= _BV(WDIE);
+  sei();
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 }
 
 void loop() {
   updateData();
-  wdt_reset();
+  sleep_enable();
+  sleep_cpu();
+}
+
+ISR (WDT_vect) {
+  WDTCR |= _BV(WDIE);
 }
