@@ -9,6 +9,7 @@
  *  5 - SDA, 7 - SCL
  *  
  *  no bootloader, internal clock 1MHz
+ *  LTO disabled
  *  BOD disabled
  */
  
@@ -60,7 +61,7 @@ void updateDisplay() {
 void updateData() {
   ct=millis();
   if(checkmillis(ct,&pt,60000)) {
-    if(checkmillis(ct,&tt,5000)) {
+    if(checkmillis(ct,&tt,8000)) {
       cSensor.takeForcedMeasurement();
       ps=cSensor.getPressure()-ps_error;
       temp=cSensor.getTemperatureCelcius();
@@ -68,11 +69,11 @@ void updateData() {
       ps=cSensor.getPressure(true)-ps_error;
     updateDisplay();
   } else
-  if(checkmillis(ct,&tt,5000)) {
+  if(checkmillis(ct,&tt,8000)) {
     temp=cSensor.getTemperatureCelcius(true); // true when read one value only
     updateDisplay();
   }
-  delay(1000);  
+  delay(1000);
 }
 
 void setup() {
@@ -96,7 +97,7 @@ void setup() {
   ADCSRA &= ~(1<<ADEN);
   // watchdog interrupt
   wdt_reset();
-  wdt_enable(WDTO_4S);
+  wdt_enable(WDTO_8S);
   WDTCR |= _BV(WDIE);
   sei();
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
