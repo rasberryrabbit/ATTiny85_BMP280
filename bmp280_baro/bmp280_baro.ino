@@ -23,7 +23,6 @@ ForcedClimate cSensor = ForcedClimate(TinyWireM, 0x76);
 unsigned long ct, pt, tt;
 int32_t temp;
 uint32_t ps;
-int ps_error=0;
 
 bool checkmillis(unsigned long c, unsigned long *p, unsigned long limit) {
   unsigned long vt;
@@ -63,17 +62,17 @@ void updateData() {
   if(checkmillis(ct,&pt,60000)) {
     if(checkmillis(ct,&tt,8000)) {
       cSensor.takeForcedMeasurement();
-      ps=cSensor.getPressure()-ps_error;
+      ps=cSensor.getPressure();
       temp=cSensor.getTemperatureCelcius();
     } else
-      ps=cSensor.getPressure(true)-ps_error;
+      ps=cSensor.getPressure(true);
     updateDisplay();
   } else
   if(checkmillis(ct,&tt,8000)) {
     temp=cSensor.getTemperatureCelcius(true); // true when read one value only
     updateDisplay();
   }
-  delay(1000);
+  delay(500);
 }
 
 void setup() {
@@ -90,7 +89,7 @@ void setup() {
   cSensor.begin();
 
   cSensor.takeForcedMeasurement();
-  ps=cSensor.getPressure()-ps_error;
+  ps=cSensor.getPressure();
   temp=cSensor.getTemperatureCelcius();
   updateDisplay();
 
