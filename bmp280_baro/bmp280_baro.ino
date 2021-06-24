@@ -20,9 +20,9 @@
 #include <forcedClimate.h>
 
 ForcedClimate cSensor = ForcedClimate(TinyWireM, 0x76);
-unsigned long ct, pt, tt;
-int32_t temp;
-uint32_t ps;
+volatile unsigned long ct, pt, tt;
+volatile int32_t temp;
+volatile uint32_t ps;
 int ps_error=0;
 
 bool checkmillis(unsigned long c, unsigned long *p, unsigned long limit) {
@@ -97,7 +97,7 @@ void setup() {
   ADCSRA &= ~(1<<ADEN);
   // watchdog interrupt
   wdt_reset();
-  wdt_enable(WDTO_8S);
+  wdt_enable(WDTO_4S);
   WDTCR |= _BV(WDIE);
   sei();
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
