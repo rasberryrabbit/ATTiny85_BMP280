@@ -20,9 +20,9 @@
 #include <forcedClimate.h>
 
 ForcedClimate cSensor = ForcedClimate(TinyWireM, 0x76);
-volatile unsigned long ct, pt, tt;
-volatile int32_t temp;
-volatile uint32_t ps;
+unsigned long ct, pt, tt;
+int32_t temp;
+uint32_t ps;
 int ps_error=0;
 
 bool checkmillis(unsigned long c, unsigned long *p, unsigned long limit) {
@@ -61,7 +61,7 @@ void updateDisplay() {
 void updateData() {
   ct=millis();
   if(checkmillis(ct,&pt,60000)) {
-    if(checkmillis(ct,&tt,8000)) {
+    if(checkmillis(ct,&tt,6000)) {
       cSensor.takeForcedMeasurement();
       ps=cSensor.getPressure()-ps_error;
       temp=cSensor.getTemperatureCelcius();
@@ -69,7 +69,7 @@ void updateData() {
       ps=cSensor.getPressure(true)-ps_error;
     updateDisplay();
   } else
-  if(checkmillis(ct,&tt,8000)) {
+  if(checkmillis(ct,&tt,6000)) {
     temp=cSensor.getTemperatureCelcius(true); // true when read one value only
     updateDisplay();
   }
