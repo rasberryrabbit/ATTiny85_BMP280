@@ -11,6 +11,9 @@
  *  no bootloader, internal clock 1MHz
  *  LTO disabled
  *  BOD disabled
+ *  
+ *  TinyWireM 1.0.1
+ *  Tiny4kOLED 1.5.1
  */
  
 #include <TinyWireM.h>
