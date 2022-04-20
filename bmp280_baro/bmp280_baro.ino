@@ -12,7 +12,7 @@
  *  LTO disabled
  *  BOD disabled
  *  
- *  Tiny4kOLED 1.5.1
+ *  Tiny4kOLED 1.5.4
  */
  
 #include <TinyWireM.h>
