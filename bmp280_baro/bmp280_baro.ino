@@ -14,10 +14,17 @@
  *  
  *  Tiny4kOLED 1.5.4
  */
+
+//#define USE_BIG_FONT
  
 #include <TinyWireM.h>
 #include <Tiny4kOLED.h>
+
+#ifdef USE_BIG_FONT
 #include <font16x32digits.h>
+#else
+#include <PixelOperatorBold.h>
+#endif
 
 #include <forcedClimate.h>
 
@@ -26,6 +33,7 @@ unsigned long ct, pt, tt;
 int32_t temp;
 uint32_t ps;
 int cnt_ps=0;
+int py=0;
 
 bool checkmillis(unsigned long c, unsigned long *p, unsigned long limit) {
   unsigned long vt;
@@ -43,18 +51,40 @@ bool checkmillis(unsigned long c, unsigned long *p, unsigned long limit) {
 
 
 
-void updateDisplay() { 
+void updateDisplay() {
+#ifdef USE_BIG_FONT
   oled.setCursor(0,0);
-  oled.print(temp/100);
-  oled.print(".");
-  oled.print(temp%100);
-  oled.switchRenderFrame();
-  oled.setCursor(0,0);
+#else
+  oled.setCursor(0,py);
+  oled.print("                ");
+int randx=random(16);
+int randy=random(2);
+  oled.setCursor(randx,randy);
+#endif
   oled.print(ps/100);
   oled.print(".");
   oled.print(ps%100);
+#ifndef USE_BIG_FONT
+  oled.print(" hPa");
+#endif
   oled.switchRenderFrame();
-  // display frames
+
+#ifdef USE_BIG_FONT
+  oled.setCursor(0,0);
+#else
+  oled.setCursor(0,py);
+  oled.print("                ");
+  oled.setCursor(randx,randy);
+#endif
+  oled.print(temp/100);
+  oled.print(".");
+  oled.print(temp%100);
+#ifndef USE_BIG_FONT
+  oled.print(" Celsius");
+  py=randy;
+#endif
+  oled.switchRenderFrame();
+
   oled.switchDisplayFrame();
   oled.switchDisplayFrame();
   delay(100);
@@ -81,11 +111,18 @@ void setup() {
   TinyWireM.begin();
   oled.begin(128, 64, sizeof(tiny4koled_init_128x64r), tiny4koled_init_128x64r);
   delay(500);
+#ifdef USE_BIG_FONT
   oled.setFont(FONT16X32DIGITS);
-  oled.clear();
-  oled.switchRenderFrame();
+#else
+  oled.setFont(FONT8X16POB);
+#endif
   oled.setContrast(70);
   oled.on();
+  // clear display buffer
+  oled.clear();
+  oled.switchRenderFrame();
+  oled.clear();
+  oled.switchRenderFrame();
   cSensor.begin();
 
   cSensor.takeForcedMeasurement();
