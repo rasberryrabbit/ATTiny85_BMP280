@@ -23,7 +23,8 @@
 #ifdef USE_BIG_FONT
 #include <font16x32digits.h>
 #else
-#include <PixelOperatorBold.h>
+//#include <PixelOperatorBold.h>
+#include "RobotoLight.h"
 #endif
 
 #include <forcedClimate.h>
@@ -56,8 +57,8 @@ void updateDisplay() {
   oled.setCursor(0,0);
 #else
   oled.setCursor(0,py);
-  oled.print("                ");
-int randx=random(16);
+  oled.print("          ");
+int randx=random(8);
 int randy=random(2);
   oled.setCursor(randx,randy);
 #endif
@@ -65,7 +66,7 @@ int randy=random(2);
   oled.print(".");
   oled.print(ps%100);
 #ifndef USE_BIG_FONT
-  oled.print(" hPa");
+  //oled.print(" hPa");
 #endif
   oled.switchRenderFrame();
 
@@ -73,14 +74,14 @@ int randy=random(2);
   oled.setCursor(0,0);
 #else
   oled.setCursor(0,py);
-  oled.print("                ");
+  oled.print("          ");
   oled.setCursor(randx,randy);
 #endif
   oled.print(temp/100);
   oled.print(".");
   oled.print(temp%100);
 #ifndef USE_BIG_FONT
-  oled.print(" Celsius");
+  //oled.print(" Celsius");
   py=randy;
 #endif
   oled.switchRenderFrame();
@@ -114,7 +115,8 @@ void setup() {
 #ifdef USE_BIG_FONT
   oled.setFont(FONT16X32DIGITS);
 #else
-  oled.setFont(FONT8X16POB);
+  //oled.setFont(FONT8X16POB);
+  oled.setFont(ROBOTOLIGHT);
 #endif
   oled.setContrast(70);
   oled.on();
