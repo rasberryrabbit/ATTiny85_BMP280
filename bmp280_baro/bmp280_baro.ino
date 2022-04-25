@@ -24,7 +24,8 @@
 #include <font16x32digits.h>
 #else
 //#include <PixelOperatorBold.h>
-#include "RobotoLight.h"
+//#include "RobotoLight.h"
+#include "NixieOne.h"
 #endif
 
 #include <forcedClimate.h>
@@ -116,7 +117,8 @@ void setup() {
   oled.setFont(FONT16X32DIGITS);
 #else
   //oled.setFont(FONT8X16POB);
-  oled.setFont(ROBOTOLIGHT);
+  //oled.setFont(ROBOTOLIGHT);
+  oled.setFont(NIXIEONE);
 #endif
   oled.setContrast(70);
   oled.on();
