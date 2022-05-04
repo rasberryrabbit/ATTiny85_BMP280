@@ -36,6 +36,8 @@ int32_t temp;
 uint32_t ps;
 int cnt_ps=0;
 int py=0;
+char buf[3];
+int nmod;
 
 bool checkmillis(unsigned long c, unsigned long *p, unsigned long limit) {
   unsigned long vt;
@@ -52,7 +54,6 @@ bool checkmillis(unsigned long c, unsigned long *p, unsigned long limit) {
 }
 
 
-
 void updateDisplay() {
 #ifdef USE_BIG_FONT
   oled.setCursor(0,0);
@@ -63,9 +64,13 @@ int randx=random(8);
 int randy=random(2);
   oled.setCursor(randx,randy);
 #endif
+  buf[2]=0;
   oled.print(ps/100);
   oled.print(".");
-  oled.print(ps%100);
+  nmod=ps%100;
+  buf[1]=0x30+nmod%10;
+  buf[0]=0x30+nmod/10;
+  oled.print(buf);
 #ifndef USE_BIG_FONT
   //oled.print(" hPa");
 #endif
@@ -80,7 +85,10 @@ int randy=random(2);
 #endif
   oled.print(temp/100);
   oled.print(".");
-  oled.print(temp%100);
+  nmod=temp%100;
+  buf[1]=0x30+nmod%10;
+  buf[0]=0x30+nmod/10;
+  oled.print(buf);
 #ifndef USE_BIG_FONT
   //oled.print(" Celsius");
   py=randy;
