@@ -110,9 +110,8 @@ void updateData() {
     temp=cSensor.getTemperatureCelcius(true); // true when read one value only
   }
   cnt_ps++;
-  cnt_ps&=7;
+  cnt_ps&=(16-1);
   updateDisplay();
-  delay(500);
 }
 
 void setup() {
@@ -142,19 +141,19 @@ void setup() {
   temp=cSensor.getTemperatureCelcius();
   updateDisplay();
 
-  ADCSRA &= ~(1<<ADEN);
   // watchdog interrupt
   wdt_reset();
   wdt_enable(WDTO_8S);
   WDTCR |= _BV(WDIE);
-  sei();
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  sei();  
 }
 
 void loop() {
+  ADCSRA &= ~(1<<ADEN);
   updateData();
-  sleep_enable();
-  sleep_cpu();
+  wdt_reset();
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  sleep_mode();
 }
 
 ISR (WDT_vect) {
